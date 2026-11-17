@@ -2,7 +2,7 @@
 
 Projeto experimental para recriar um **agente de programação autônomo no terminal** inspirado no Claude Code — conectando LLMs com suporte a *tool calling* a ferramentas locais de leitura, busca, edição cirúrgica e execução de comandos, com controle de permissões e gerenciamento de contexto.
 
-> **Status:** Fase 0 — Documentação e Planejamento
+> **Status:** Fase 2 concluída (Exploração e Edição Inteligente em PHP 8.4 + MySQL) — pronto para Fase 3
 
 ---
 

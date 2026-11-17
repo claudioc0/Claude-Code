@@ -31,3 +31,10 @@ Thumbs.db
 logs/
 *.log
 tmp/
+
+# PHP / Composer / Tests
+vendor/
+composer.phar
+.phpunit.result.cache
+*.sqlite
+*.sqlite3

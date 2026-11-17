@@ -1,0 +1,31 @@
+{
+    "name": "claudiocode/claude-code-clone",
+    "description": "Clone experimental do Claude Code em PHP com persistência MySQL",
+    "type": "project",
+    "require": {
+        "php": ">=8.3",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-pdo": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ClaudeCode\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ClaudeCode\\Tests\\": "tests/"
+        }
+    },
+    "bin": [
+        "bin/claude-code"
+    ],
+    "scripts": {
+        "test": "phpunit"
+    }
+}

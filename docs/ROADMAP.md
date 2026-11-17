@@ -7,24 +7,24 @@ Plano incremental em 5 fases para construir o agente do zero até recursos avan�
 ## Fase 1: MVP — Loop Agêntico Mínimo (REPL)
 **Objetivo:** Agente funcional no terminal capaz de ler arquivos, editar código e executar comandos.
 
-- [ ] Setup inicial do projeto, gerenciamento de dependências e configuração de `.env`.
-- [ ] Abstração mínima de provider LLM com suporte a *streaming* e *tool calling*.
-- [ ] Loop agêntico principal (envio de mensagens, execução de `tool_calls`, retorno de resultados).
-- [ ] Ferramentas iniciais:
-  - [ ] `read_file`
-  - [ ] `write_file`
-  - [ ] `run_command`
-- [ ] Prompt simples de confirmação `[s/N]` antes de ações mutáveis.
+- [x] Setup inicial do projeto (`composer.json`), gerenciamento de dependências e configuração de `.env`.
+- [x] Abstração mínima de provider LLM (`AnthropicProvider`) com suporte a *streaming* e *tool calling*.
+- [x] Loop agêntico principal (`AgentLoop`) com persistência em MySQL (`sessions`, `messages`, `tool_calls`).
+- [x] Ferramentas iniciais:
+  - [x] `read_file`
+  - [x] `write_file`
+  - [x] `run_command`
+- [x] Prompt simples de confirmação `[s/N]` antes de ações mutáveis.
 
 ---
 
 ## Fase 2: Exploração de Codebase e Edição Inteligente
 **Objetivo:** Navegar projetos reais com precisão e baixo consumo de tokens.
 
-- [ ] Ferramenta `glob` respeitando regras de `.gitignore`.
-- [ ] Ferramenta `grep_search` para busca por texto/regex.
-- [ ] Ferramenta `edit_file` (search-and-replace com validação de unicidade).
-- [ ] Preview de diff colorido no terminal antes da aprovação de edições.
+- [x] Ferramenta `glob` respeitando regras de `.gitignore`.
+- [x] Ferramenta `grep_search` para busca por texto/regex.
+- [x] Ferramenta `edit_file` (search-and-replace com validação de unicidade).
+- [x] Preview de diff colorido no terminal antes da aprovação de edições.
 
 ---
 

@@ -1,0 +1,66 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+
+use ClaudeCode\Core\AgentLoop;
+use ClaudeCode\Core\Config;
+use ClaudeCode\Core\ContextManager;
+use ClaudeCode\Permissions\PermissionManager;
+use ClaudeCode\Providers\ProviderFactory;
+use ClaudeCode\Storage\Database;
+use ClaudeCode\Storage\SessionRepository;
+use ClaudeCode\Tools\EditFileTool;
+use ClaudeCode\Tools\GlobTool;
+use ClaudeCode\Tools\GrepSearchTool;
+use ClaudeCode\Tools\ReadFileTool;
+use ClaudeCode\Tools\RunCommandTool;
+use ClaudeCode\Tools\ToolRegistry;
+use ClaudeCode\Tools\WriteFileTool;
+use ClaudeCode\Ui\TerminalRepl;
+
+$workspaceRoot = getcwd() ?: dirname(__DIR__);
+$config = Config::fromEnv($workspaceRoot);
+
+$provider = ProviderFactory::fromConfig($config);
+$model = $provider->getModel();
+$permissionMode = $config->get('PERMISSION_MODE', PermissionManager::MODE_ASK);
+$commandTimeout = $config->getInt('COMMAND_TIMEOUT', 30);
+
+$repository = null;
+$sessionId = null;
+$storageStatus = 'memória (MySQL não conectado)';
+
+try {
+    $db = Database::fromConfig($config);
+    $repository = new SessionRepository($db);
+    $sessionId = $repository->createSession($workspaceRoot, $model, $permissionMode);
+    $storageStatus = sprintf('%s (sessão %s)', $db->driver(), substr($sessionId, 0, 8));
+} catch (Throwable $e) {
+    $storageStatus = 'memória (erro DB: ' . $e->getMessage() . ')';
+}
+
+$permissions = new PermissionManager($workspaceRoot, $permissionMode);
+$tools = new ToolRegistry([
+    new ReadFileTool($permissions),
+    new WriteFileTool($permissions),
+    new EditFileTool($permissions),
+    new GlobTool($permissions),
+    new GrepSearchTool($permissions),
+    new RunCommandTool($permissions, $commandTimeout),
+]);
+
+$context = new ContextManager($workspaceRoot, $repository, $sessionId);
+$agent = new AgentLoop($provider, $tools, $permissions, $context, $repository);
+$repl = new TerminalRepl($agent, $context, $permissions, $provider, $storageStatus);
+
+$options = getopt('p:', ['prompt:']);
+$headlessPrompt = $options['p'] ?? $options['prompt'] ?? null;
+
+if (is_string($headlessPrompt) && trim($headlessPrompt) !== '') {
+    exit($repl->runHeadless($headlessPrompt));
+}
+
+exit($repl->run());
